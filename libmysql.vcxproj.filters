@@ -62,5 +62,8 @@
     <ClInclude Include="sqldata-converter.h">
       <Filter>..</Filter>
     </ClInclude>
+    <ClInclude Include="sqldata.h">
+      <Filter>..</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

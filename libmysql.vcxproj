@@ -152,6 +152,7 @@
     <ClInclude Include="connection.h" />
     <ClInclude Include="jsconnection.h" />
     <ClInclude Include="sqldata-converter.h" />
+    <ClInclude Include="sqldata.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />

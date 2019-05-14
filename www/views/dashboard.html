@@ -1,0 +1,97 @@
+{% extends "base.html" %} {% block main %}
+<link rel="stylesheet" href="/static/css/dashboard.css">
+  <div class='setting-group'>
+      <h1 class='setting-title'>Dashboard</h1>
+  </div>
+  
+  <div class='setting-group'>
+    <h2 class='setting-title'>Meta</h2>
+    <div class='setting-right'>
+        <div class='setting-item'>
+          <h4>language</h4>
+          <div class='ipt'>
+              <input></input>
+              <span class='ipt-bar'></span>
+          </div>
+        </div>
+        <div class='setting-item'>
+            <h4>title</h4>
+            <div class='ipt'>
+                <input></input>
+                <span class='ipt-bar'></span>
+            </div>
+        </div>
+        <div class='setting-item'>
+            <h4>first publish year</h4>
+            <div class='ipt'>
+                <input></input>
+                <span class='ipt-bar'></span>
+            </div>
+        </div>
+        <div class='setting-item'>
+            <button>Submit</button>
+        </div>
+        
+    </div>
+  </div>
+  <div class='setting-group'>
+    <div class='setting-title'>
+      <h2> Book Batch Loader </h2>
+    </div>
+    <div class='setting-right'>
+      <div class='setting-item'>
+        <h4>Please Make sure data is loaded by Our script</h4>
+          <div class='ipt'>
+            <input type="file" onchange="loadBatchFromFile(this)" >
+          </div>
+      </div>
+      <div class='setting-item'>
+        <h4>Average Copies for a book</h4>
+        <div class='ipt'><input id='random-generate-avg'></input><span class='ipt-bar'></span></div>
+            <button onclick="generateRandomCopies()" >Generate Random Copies</button>
+      </div>
+    </div>
+  </div>
+
+
+  {% for table in tables %}
+  <div class='table-outter'>
+  <h1> {{table.title}} </h1>
+  <table name='tables' id={{table.title}} >
+    <tr>
+      {% for field in table.fields %}
+      <th data-type='field'>{{ field.columnname }}</th>
+      {% endfor %}
+    </tr>
+    
+    {% for row in table.rows %}
+    {% set row_loop = loop %}
+      <tr data-row={{row_loop.index0}}>
+        {% for col_name, col in row %}
+          <td contenteditable data-row={{row_loop.index0}} data-table={{table.title}} class='editable' >
+          {% if table.fields[loop.index0].type == types.numeric %}
+            {{col.integer}}
+            {% if col.scale != 0 %}
+            .
+            {{col.decimal}}
+            {% endif %}
+          {% elif col.fraction != undefined%}
+            {{col.year}}-{{col.month}}-{{col.date}}, {{col.hour}}:{{col.minute}}:{{col.second}}.{{col.precision}}
+          {% elif col.year != undefined %}
+            {{col.year}}-{{col.month}}-{{col.date}}
+          {% elif col.hour != undefined %}
+            {{col.hour}}:{{col.minute}}:{{col.second}}
+          {% else %}
+          {{col}}
+          {% endif %}
+          </td>
+        {% endfor %}
+      <tr>
+    {% endfor %}
+    </table>
+    <button class='submit' data-table={{table.title}}> Submit </button>
+</div>
+{% endfor %}
+  <script src='/static/js/dashboard.js'></script>
+{% endblock %}
+        

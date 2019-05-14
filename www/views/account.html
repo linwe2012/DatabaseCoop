@@ -1,0 +1,31 @@
+{% extends "base.html" %} {% block main %}
+<link rel="stylesheet" href="/static/css/login.css">
+<div class='login-main-wrap'>
+    <div class='card login-card'>
+        <div class='card-img-wrap'><img src = '/static/img/main2.jpg' /></div>
+        <div class='card-inner'>
+            <h1 style='color: var(--theme-primary);'>
+                    Start Your Journey
+            </h1>
+            <div class='login-ipt-wrap' id='ipt-username-wrap'>
+                <span><i class='material-icons'>account_circle</i></span>
+                <span><input class='login-ipt' id='ipt-username'></span>
+            </div>
+            <div class='login-ipt-wrap' id='ipt-passwd-wrap'>
+                <span><i class='material-icons' id='password-lock' style='cursor:pointer;'>lock</i></span>
+                <span><input class='login-ipt' id='ipt-passwd' type='password'></span>
+            </div>
+            <div class='error-msg' id='error-msg'></div>
+            <div class='login-action'>
+                <button id='user-login'>Login</button>
+                <button id='user-signup'>SignUp</button>
+            </div>     
+        </div>
+    </div>
+    <div class="circle1"></div>
+    <div class="circle2"></div>
+    <div class="circle3"></div>
+</div>
+<script src='/static/js/account.js'></script>
+{% endblock %}
+

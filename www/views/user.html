@@ -1,0 +1,20 @@
+{% extends "base.html" %} {% block main %}
+<link rel="stylesheet" href="/static/css/user.css">
+
+  </div>
+  <img src='/static/img/main4.jpg' id = 'avatar-background' style='width: 100%; height: auto;position: relative;'></img>
+  <div class='user-base'>
+      <div class='avatar' ><img src={{avatar}}></div>
+      <div class='user-info'>
+        <div class='user-name'>{{usr_name}}</div>
+        <div class='user-info-extra' id='user-info-extra'></div>
+      </div>
+      
+  </div>
+
+  <div class='main' id='card-container'>
+
+  </div>
+  <script src='/static/js/user.js'></script>
+  
+{% endblock %}}

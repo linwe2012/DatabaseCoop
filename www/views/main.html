@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Required styles for MDC Web -->
+  <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="css/roboto.css">
+  <link rel="stylesheet" href="css/animation.css">
+  <link rel="stylesheet" href="css/google-sans.css">
+  <link rel="stylesheet" href="main.css">
+
+
+  <style>
+  :root{
+    --mdc-theme-primary: #795548;
+  }
+  
+  
+  body {
+    margin: 0;
+    display: block;
+    font-family: Roboto,sans-serif;
+  }
+  .mdc-typography--subtitle2,
+  .mdc-typography--headline6,
+  h1, h2, h3, h4, h5 {
+    font-family: 'Google Sans', 'Open Sans',Roboto,sans-serif;
+  }
+
+  .card-image-container-normal {
+    width: 300px;
+  }
+  
+  .card-image-container-normal img {
+    display: block;
+  }
+  
+  .drawer-top-app-bar {
+    position: absolute;
+  }
+  
+  
+  .card-image-container-expand {
+    width: 400px;
+    transition: width 0.3s;
+  }
+  
+  .card-book {
+    width: 350px;
+    margin:20px;
+    transition: width 0.3s;
+  }
+  
+  .card-book-expand {
+    position:relative;
+    left: 5%;
+    width: 90%;
+    margin: 5%;
+    transition: width 0.3s, margin 0.3s, left 0.3s;
+    z-index: 4;
+  }
+  
+ 
+  
+  .card-title-expand {
+    font-size: 2.5rem;
+    line-height: 4rem !important;
+    font-weight: 1000;
+    transition: font-size 0.5s;
+  }
+  .card-title {
+    line-height: 1.5rem;
+    margin:0;
+    font-weight:700;
+  }
+  
+  .card-subtitle {
+    margin:0;
+    line-height: 1rem;
+    color:rgba(0,0,0,.44);
+    font-weight:600;
+  }
+  
+  .card-subtitle-expand {
+    padding-left: 0.5rem;
+    font-size: 1.2rem;
+    line-height: 2rem;
+    transition: font-size 0.5s;
+  }
+  
+  .card-support {
+    padding: 0 1rem 8px;
+  }
+  
+  .card-support-expand {
+    font-size: 1rem;
+    transition: font-size 0.5s;
+  }
+  .root {
+    width: 100%;
+  }
+  
+  .mdc-list-item--activated, .mdc-drawer, .mdc-list-item__graphic,
+  .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+    color: var(--mdc-theme-primary) !important;
+  }
+  </style>
+  </head>
+<body>
+<div class='mdc-typography'>
+
+  <aside class="mdc-drawer mdc-drawer--modal" id='menu-sidebar'>
+    <div class="mdc-drawer__header">
+      <h3 class="mdc-drawer__title">Mail</h3>
+      <h6 class="mdc-drawer__subtitle">email@material.io</h6>
+    </div>
+    <div class="mdc-drawer__content">
+      <nav class="mdc-list">
+        <a class="mdc-list-item mdc-list-item--activated" href="#" tabindex="0" aria-selected="true"><i class="material-icons mdc-list-item__graphic" aria-hidden="true">inbox</i>Inbox</a>
+        <a class="mdc-list-item" href="#" tabindex="-1"><i class="material-icons mdc-list-item__graphic" aria-hidden="true">star</i>Star</a>
+        <a class="mdc-list-item" href="#" tabindex="-1"><i class="material-icons mdc-list-item__graphic" aria-hidden="true">send</i>Sent Mail</a>
+        <a class="mdc-list-item" href="#" tabindex="-1"><i class="material-icons mdc-list-item__graphic" aria-hidden="true">drafts</i>Drafts</a>
+        <hr class="mdc-list-divider">
+          <h6 class="mdc-list-group__subheader">Labels</h6>
+            <a class="mdc-list-item" href="#" tabindex="-1"><i class="material-icons mdc-list-item__graphic" aria-hidden="true">bookmark</i>Family</a>
+            <a class="mdc-list-item" href="#" tabindex="-1"><i class="material-icons mdc-list-item__graphic" aria-hidden="true">bookmark</i>Friends</a>
+            <a class="mdc-list-item" href="#" tabindex="-1"><i class="material-icons mdc-list-item__graphic" aria-hidden="true">bookmark</i>Work</a>
+            <hr class="mdc-list-divider">
+              <a class="mdc-list-item" href="#" tabindex="-1"><i class="material-icons mdc-list-item__graphic" aria-hidden="true">settings</i>Settings</a>
+              <a class="mdc-list-item" href="#" tabindex="-1"><i class="material-icons mdc-list-item__graphic" aria-hidden="true">announcement</i>Help &amp; feedback</a>
+      </nav>
+    </div>
+  </aside>
+  
+  <div class="mdc-drawer-scrim"></div>
+  
+  <header class="mdc-top-app-bar drawer-top-app-bar" id='app-bar'>
+    <div class="mdc-top-app-bar__row">
+    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+    <button class="mdc-top-app-bar__navigation-icon" id='menu'>
+      <svg viewBox="0 0 800 600" id='menu-svg'>
+        <path d="M300,220 C300,220 520,220 540,220 C740,220 640,540 520,420 C440,340 300,200 300,200" id="top"></path>
+        <path d="M300,320 L540,320" id="middle"></path>
+        <path d="M300,210 C300,210 520,210 540,210 C740,210 640,530 520,410 C440,330 300,190 300,190" id="bottom" transform="translate(480, 320) scale(1, -1) translate(-480, -318) "></path>
+      </svg>
+    </button>
+      <!--button class="material-icons mdc-top-app-bar__navigation-icon" id='menu'>menu</button-->
+      <span class="mdc-top-app-bar__title">Modal Drawer</span>
+    </section>
+    </div>
+  </header>
+  <div class="mdc-top-app-bar--fixed-adjust"></div>
+  
+  
+
+  
+  <!--div class="mdc-card card-book" id="card-1" data-img = "img/1.jpg">
+    <div class="mdc-card__primary-action" tabindex="0" id="card-1-content" style="flex-direction:row;">
+      <div class="mdc-card__media card-image-container-normal" id="card-1-image-container">
+        <img src="https://i.ibb.co/2qTJ0CS/1.jpg" id="card-1-img" style="width:100%;" crossOrigin />
+      </div>
+      
+      <div style="flex-direction:column;">
+        <div style="padding: 1rem;">
+          <h2 class="mdc-typography--headline6 card-title" id="card-1-title">Out of the Box</h2>
+          <h3 class="mdc-typography--subtitle2 card-subtitle" id="card-1-subtitle">by Suzanne Dudley</h3>
+        </div>
+        <div class="mdc-typography--body2 card-support" id="card-1-support">Visit ten places on our planet that are undergoing the biggest changes today.</div>
+      </div>
+      
+    </div>
+    <div class="mdc-card__actions" id="card-1-actions">
+      <div class="mdc-card__action-buttons">
+        <button class="mdc-button mdc-card__action mdc-card__action--button" id="card-1-button-1" data-card="card-1">Detail</button>
+        <button class="mdc-button mdc-card__action mdc-card__action--button" id="card-1-button-2" disabled>Borrow</button>
+      </div>
+      
+      <div class="mdc-card__action-icons">
+        <button class="mdc-icon-button mdc-card__action mdc-card__action--icon" aria-pressed="false" aria-label="Add to favorites" title="Add to favorites">
+          <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">favorite</i>
+          <i class="material-icons mdc-icon-button__icon">favorite_border</i>
+        </button>
+        <button class="mdc-icon-button material-icons mdc-card__action mdc-card__action--icon" title="Share">share</button>
+        <button class="mdc-icon-button material-icons mdc-card__action mdc-card__action--icon" title="More options" data-mdc-ripple-is-unbounded="true">more_vert</button>
+      </div>
+      
+    </div>
+  </div-->
+  <div id='cards-container' style='display:flex; flex-direction: row;'></div>
+  <!-- Render textfield component -->
+  <div class="mdc-text-field username">
+    <input type="text" class="mdc-text-field__input" id="username-input" name="username">
+    <label class="mdc-floating-label" for="username-input">Username</label>
+    <div class="mdc-line-ripple"></div>
+  </div>
+  <div class="mdc-text-field password">
+    <input type="password" class="mdc-text-field__input" id="password-input" name="password" required minlength="8">
+    <label class="mdc-floating-label" for="password-input">Password</label>
+    <div class="mdc-line-ripple"></div>
+  </div>
+  
+  <div class="button-container">
+    <button type="button" class="mdc-button cancel">
+      Register
+    </button>
+    <button class="mdc-button mdc-button--raised next">
+      Next
+    </button>
+  </div>
+  <div class="mdc-switch mdc-switch--checked">
+    <div class="mdc-switch__track"></div>
+    <div class="mdc-switch__thumb-underlay">
+      <div class="mdc-switch__thumb">
+          <input type="checkbox" id="basic-switch" class="mdc-switch__native-control" role="switch">
+      </div>
+    </div>
+  </div>
+  <label for="basic-switch">off/on</label>
+</div>
+</body>
+
+
+<!-- Required MDC Web JavaScript library -->
+
+<script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+<script src="main.js"></script>
+<script src="js/color-thief.js"></script>
+<!-- Instantiate single textfield component rendered in the document -->
+<script>
+'use strict'
+function clamp(n, low, high){
+  if(n < low) return low;
+  if(n > high) return high;
+  return n;
+}
+function makeContrast(modified, example, thres) {
+  const mid = 125;
+  for(var i = 0; i < 3; ++i){
+    let x = modified[i] - example[i];
+    if(x > 0 && x < thres || x < 0 && x > -thres){
+      
+      if(modified[i] > mid) modified[i] += thres;
+      else modified[i] -= thres;
+    }
+    modified[i] = clamp(modified[i],0,255);
+  }
+  return modified;
+}
+
+function makeLessContrast(modified, example, thres) {
+  const mid = 125;
+  for(var j = 0; j < 3; ++j){
+    let x = modified[j] - example[j];
+    if(x > 0 && x > thres || x < 0 && x < -thres){
+      let d = thres;
+      if(modified[j] > mid) d = -d;
+      for(var i = 0; i < 3; ++i) {
+        modified[i] += d;
+        modified[i] = clamp(modified[i],0,255);
+      }
+      return modified;
+    }
+  }
+  return modified;
+}
+
+var global = {
+  menu_on : false,
+  menu_toggle : function () {
+    // returns true if toogle towards on
+    this.menu_on = !this.menu_on; //= document.getElementById('menu-svg').classList.toggle('cross')
+    if(this.menu_on === false && cardHelper.is_active()){
+      cardHelper.shrink_card()
+      this.menu_on = document.getElementById('menu').classList.toggle('cross')
+    }
+    else { //if(this.menu_on === true) {
+      this.drawer.open = !this.drawer.open;
+    }
+  },
+  menu_toggle_no_sidebar: function(){
+    this.menu_on = document.getElementById('menu').classList.toggle('cross')
+  }
+}
+
+var cardHelper = {
+  is_active: function() { return this.active_card.length !== 0; },
+  active_card: '',
+  palette_cache: {},
+  items_list: ['image-container', 'title', 'subtitle', 'support'],
+  toggle_class: function (card) {
+    for(var item_idx = 0; item_idx < this.items_list.length; ++item_idx){
+      document.getElementById(card + '-' + this.items_list[item_idx])
+              .classList.toggle('card-' + this.items_list[item_idx] + '-expand');
+    }
+  },
+  expand_card: function (event) {
+    /* if(global.menu_on === true) return; */
+    global.menu_toggle_no_sidebar();
+    this.active_card = event.target.getAttribute('data-card');
+    var card = this.active_card
+    
+    this.toggle_class(card)
+    
+    document.getElementById(card).classList.add("card-book-expand");
+    document.getElementById(card).classList.remove("card-book");
+    document.getElementById(card + "-actions").style.display = "none";
+    
+    var colorThief = new ColorThief();
+    
+    var palette = this.palette_cache[card];
+    if( palette === undefined){
+      palette = colorThief.getPalette(document.getElementById(card + "-img"), 2);
+      palette[1] = makeContrast(palette[1], palette[0], 80);
+      palette[2] = makeLessContrast(palette[2], palette[1], 180)
+      this.palette_cache[card] = palette;
+    }
+    document.getElementById(card).style.background = `rgb(${palette[0][0]}, ${palette[0][1]}, ${palette[0][2]})`
+    document.getElementById(card).style.color = `rgb(${palette[1][0]}, ${palette[1][1]}, ${palette[1][2]})`
+    document.getElementById(card + '-subtitle').style.color = `rgb(${palette[2][0]}, ${palette[2][1]}, ${palette[2][2]})`
+  },
+  
+  shrink_card: function(event) {
+    var card = this.active_card;
+    this.active_card = '';
+    
+    this.toggle_class(card)
+    
+    document.getElementById(card).classList.remove("card-book-expand");
+    document.getElementById(card).classList.add("card-book");
+    document.getElementById(card + "-actions").style.display = '';
+
+    document.getElementById(card).style.background = ''
+    document.getElementById(card).style.color = ''
+    document.getElementById(card + '-subtitle').style.color = ''
+  }
+}
+
+
+function shrinkCard(event) {
+  
+}
+  mdc.textField.MDCTextField.attachTo(document.querySelector('.mdc-text-field'));
+  mdc.textField.MDCTextField.attachTo(document.querySelector('.password'));
+  
+  mdc.ripple.MDCRipple.attachTo(document.querySelector('.cancel'));
+  mdc.ripple.MDCRipple.attachTo(document.querySelector('.next'));
+  // mdc.ripple.MDCRipple.attachTo(document.querySelector('#card-1-content'));
+  // mdc.ripple.MDCRipple.attachTo(document.querySelector('#card-1-button-1'));
+  // mdc.ripple.MDCRipple.attachTo(document.querySelector('#card-1-button-2'));
+  
+  global.drawer = mdc.drawer.MDCDrawer.attachTo(document.getElementById('menu-sidebar'))
+  
+  /*
+  const topAppBar = mdc.topAppBar.MDCTopAppBar.attachTo(document.getElementById('app-bar'));
+    topAppBar.listen('MDCTopAppBar:nav', () => {
+    drawer.open = !drawer.open;
+  });*/
+  // var ReadButton = document.getElementById('card-1-button-1');
+  // ReadButton.addEventListener("click", cardHelper.expand_card.bind(cardHelper))
+  
+  var cards = document.getElementById('cards-container');
+  GenCardHTML(cards, 1);
+  GenCardHTML(cards, 2);
+  document.getElementById('menu').addEventListener('click', global.menu_toggle.bind(global))
+  
+ 
+  // mdc.switch.MDCSwitch.attachTo(document.querySelector('.mdc-switch'));
+  // const topAppBarElement = document.querySelector('.mdc-top-app-bar');
+  // const topAppBar = new MDCTopAppBar(topAppBarElement);
+</script>
+
+
+</html>

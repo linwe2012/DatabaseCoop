@@ -1,0 +1,43 @@
+.masonry {
+    column-count: 1;
+}
+
+@media only screen and (min-width: 1050px){
+    .masonry {
+        column-count: 2;
+        min-width: 1050px;
+    }
+}
+
+@media only screen and (min-width: 1400px){
+    .masonry {
+        column-count: 2;
+        min-width: 1400px;
+    }
+}
+
+.masonry {
+    padding: 20px 30px;
+    position: relative;
+    column-gap: 0;
+    justify-content: center;
+    margin: 0 auto 30px auto;
+    box-sizing:border-box;
+    break-inside: avoid;
+    overflow: hidden;
+}
+
+.card-img-wrap {
+    width: 140px;
+    object-fit: cover;
+}
+
+.card-img-wrap img {
+    width: 140px;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-inner-text {
+    margin: 8px 20px 16px 16px;
+  }

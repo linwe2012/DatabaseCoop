@@ -1,0 +1,62 @@
+{% extends "base.html" %} {% block main %}
+<div style="width:100%;height:30px;"></div>
+<link rel="stylesheet" href="/static/css/popup.css">
+<link rel="stylesheet" href="/static/css/list.css">
+  <div class='masonry' id = 'card-container'>
+      <div class='card'>
+        <div class='card-img-wrap'>
+          <img src='https://i.ibb.co/2qTJ0CS/1.jpg' />
+        </div>
+        <button class='card-favicon'>
+          <i class="material-icons">bookmark_border</i>
+        </button>
+        <div class='card-inner'>
+         <h3>
+            Out Of the Box
+        </h3>
+          <div class='card-inner-text'>
+              This is the FIRST card I've made, and It is also a prototype of all cards below.
+              Which is why I put it here as a Memoir
+            </div>
+            <div class='card-inner-extra'>
+              Designed by LeonLin
+              <div class='card-inner-extra-auxtext'>Hope You Enjoy it</div>
+              <!-- >div class='card-inner-extra-action'>
+                  <button disabled>Borrow</button>
+              </div-->
+            </div>
+          </div>
+        </div>
+  </div>
+
+  <button onclick="loadmore()" id='loadmore'>Load More</button>
+
+  <div class="popup-wrap" id='popup-wrap' style="display:none;">
+    <div class='popup-img-pop-wrap' id='popup-img-pop-wrap' style="display:none;">
+      <i class="material-icons" onclick="ClosePopImage()">clear</i>
+      <img class="popup-img-pop" id='popup-img-pop'>
+    </div>
+    <div class='card popup'>
+      <button class='card-favicon'>
+        <i class="material-icons" id='popup-close'>clear</i>
+      </button>
+      <div class='card-img-wrap' onclick='PopImage()'><img id='popup-img' /></div>
+      <div class='card-inner'>
+        <h1 id='popup-title'></h1>
+        <div class='card-inner-text' id='popup-text'></div>
+        <div id='popup-authors' class='popup-author-wrap'></div>
+        <div id='popup-details' class='popup-author-wrap'></div>
+        <div id='popup-copies' class='popup-author-wrap'>
+          <div class='popup-indent__10' id = 'popup-in-circulation'>
+            <h3>In Circulation</h3>
+          </div>
+          <div class='popup-indent__10' id = 'popup-out-circulation'>
+            <h3>Borrowed</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <script src='/static/js/list.js'></script>
+  {% endblock %}

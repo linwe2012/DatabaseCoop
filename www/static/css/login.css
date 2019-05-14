@@ -1,0 +1,139 @@
+* {
+    box-sizing: border-box;
+}
+
+.topnav-spaceholder{
+    display: none;
+}
+
+.login-main {
+    width: 600px;
+    margin: auto;
+    background: #fff;
+    vertical-align: middle;
+}
+
+.login-main-wrap {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    justify-content: center;
+    display: flex;
+    overflow: hidden;
+}
+
+.login-card {
+    margin:auto;
+    width: 850px;
+}
+
+.card-img-wrap{
+    width: 750px;
+}
+.card-img-wrap img {
+    width: 100%;
+}
+
+.card-inner{
+    text-align: center;
+    width: 100%;
+}
+
+.card-inner h1 {
+    text-transform: uppercase;
+	background: linear-gradient(to right, #ca4466 0%, #472167 100%);
+	-webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 40px auto;
+}
+
+.login-ipt{
+    background: none;
+    border: none;
+}
+
+.login-ipt:hover{
+    background: none;
+    border: none;
+}
+
+.login-ipt:active{
+    background: #eeeeeeff;
+    border: none;
+}
+.login-ipt:focus{
+    background: #eeeeee22;
+    border: none;
+}
+
+input{
+    box-sizing: border-box;
+}
+.login-ipt-wrap{
+    margin: 20px auto;
+    background: #f4f8f7;
+    padding: 8px 10px;
+}
+
+.login-ipt-wrap span {
+    height: 100%;
+
+}
+
+.login-ipt-wrap span i {
+    vertical-align: middle;
+    color: #cacecd;
+}
+
+.login-action{
+    display: flex;
+    flex-direction: row;
+    margin: 20px auto;
+}
+
+.login-action button{
+    width: 100px;
+}
+
+.circle1{
+    z-index: -1;
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    left: -120px;
+    bottom: -100px;
+    border-radius: 50%;
+    background: rgb(222,80,69);
+    background: linear-gradient(240deg, rgba(222,80,69,1) 0%, rgba(9,9,121,1) 52%, rgba(0,212,255,1) 100%);
+}
+
+.circle2 {
+    z-index: -1;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    right: -80px;
+    top: -55px;
+    border-radius: 50%;
+    background: rgb(222,80,69);
+background: linear-gradient(240deg, rgba(222,80,69,1) 0%, rgba(80,137,241,1) 71%, rgba(0,212,255,1) 100%);
+}
+
+.circle3 {
+    z-index: -1;
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    left: 100px;
+    top: 200px;
+    border-radius: 50%;
+    background: rgba(78, 67, 66, .2);
+background: linear-gradient(240deg, rgba(110, 82, 80, .1) 0%, rgba(95, 124, 177, .2) 71%, rgba(114, 173, 185, .1) 100%);
+}
+
+.error-msg{
+    color: #e25c02;
+    height: 20px;
+    line-height: 20px;
+    font-size: 15px;
+}

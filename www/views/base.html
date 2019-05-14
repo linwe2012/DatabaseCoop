@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/static/css/animation.css">
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans|Noto+Serif|Roboto|Quicksand:400,700|Lato:200,400" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/proxima-nova.css">
+  <script src='/static/js/helper.js'> </script>
+  <link rel="icon" href="/static/img/favicon.ico" sizes="128x128">
+  </head>
+<body>
+  <div class='topnav' id='topnav'>
+    <a class='active' >Library</a>
+    <button onclick="location.href='/user'">
+      <img src={{avatar}}>
+    </button>
+    <button>
+      <i class='material-icons' onclick="GlobalSearch()">search</i>
+    </button>
+    <div class='ipt'>
+        <input id='search-ipt'></input>
+        <span class='ipt-bar'></span>
+    </div>
+    
+  </div>
+  <div class='topnav-spaceholder' id='topnav-spaceholder'></div>
+  <script src='/static/js/search.js'> </script>
+  {% block main %} {% endblock %}
+  
+</body>
+</html>

@@ -1,0 +1,84 @@
+
+.header-img-wrap {
+    width: 100%;
+}
+.header-img-wrap img {
+    display: block;
+    width: 80%;
+    height: auto;
+}
+
+.user-base{
+display: flex;
+flex-direction: row;
+}
+
+.user-info {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Proxima Nova';
+    left: 150px;
+}
+
+.user-name{
+    font-size: 40px;
+    font-weight: 800;
+    color: rgba(0, 0, 12, .7);
+    
+    margin-left: 40px;
+    margin-top: 20px;
+}
+
+.user-info-extra {
+    font-size: 18px;
+    font-weight: 400;
+    margin-left: 40px;
+    margin-top: 5px;
+    color: rgba(2, 4, 12, .32);
+    vertical-align: middle;
+    display: flex;
+    flex-direction: row;
+}
+
+.user-info-extra i{
+    margin: auto 10px auto 0px;
+    color: rgba(2, 4, 12, .18);
+}
+
+.user-info-extra span {
+    margin: auto 10px 0 0px;
+}
+
+.avatar {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 10px solid var(--global-background);
+    overflow: hidden;
+    position: relative;
+    top:-100px;
+    left: 150px;
+}
+
+.avatar img {
+    width: 100%;
+    height: auto;
+    /*vertical-align: middle;*/
+    display: block;
+}
+
+em {
+    font-weight: 800;
+}
+
+.card-img-wrap {
+    width: 140px;
+    object-fit: cover;
+}
+
+.card-img-wrap img {
+    width: 140px;
+    height: 100%;
+    object-fit: cover;
+}

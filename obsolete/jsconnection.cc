@@ -8,57 +8,57 @@ class SQLToV8Converter : public ISQLDataVisitor {
 public:
 	SQLToV8Converter(std::vector<Local<String>>& col_, Local<Object>& obj_, Isolate* isolate_)
 		:col(col_), obj(obj_), isolate(isolate_), n_row(0) {}
-	// void visit(SQLInt* i) override {
-	// 
-	// 	obj->
-	// 		Set(col[n_row], Int32::New(isolate, i->Value()));
-	// }
+	void visit(SQLInt* i) override {
 
-	void Visit(SQLBigInt* i) override {
+		obj->
+			Set(col[n_row], Int32::New(isolate, i->Value()));
+	}
+
+	void visit(SQLBigInt* i) override {
 		obj->Set(col[n_row], BigInt::New(isolate, i->Value()));
 	}
 
-	void Visit(SQLDouble* i) override {
+	void visit(SQLDouble* i) override {
 		obj->Set(col[n_row], Number::New(isolate, i->Value()));
 	}
 
-	// void visit(SQLFloat* i) override {
-	// 	obj->Set(col[n_row], Number::New(isolate, i->Value()));
-	// }
-	// 
-	// void visit(SQLNumeric* i) override {
-	// 	auto val = i->Value();
-	// 	Local<Object> t = Object::New(isolate);
-	// 	t->Set(v8str("integer"), BigInt::New(isolate, val.integer));
-	// 	t->Set(v8str("decimal"), BigInt::New(isolate, val.decimal));
-	// 	t->Set(v8str("scale"), Int32::New(isolate, val.scale));
-	// 	obj->Set(col[n_row], t);
-	// }
+	void visit(SQLFloat* i) override {
+		obj->Set(col[n_row], Number::New(isolate, i->Value()));
+	}
 
-	void Visit(SQLString *i) override {
+	void visit(SQLNumeric* i) override {
+		auto val = i->Value();
+		Local<Object> t = Object::New(isolate);
+		t->Set(v8str("integer"), BigInt::New(isolate, val.integer));
+		t->Set(v8str("decimal"), BigInt::New(isolate, val.decimal));
+		t->Set(v8str("scale"), Int32::New(isolate, val.scale));
+		obj->Set(col[n_row], t);
+	}
+
+	void visit(SQLString *i) override {
 		obj->Set(col[n_row], String::NewFromUtf8(isolate, i->Value()));
 	}
 
-	// void visit(SQLTime *i) override {
-	// 	Local<Object> t = Object::New(isolate);
-	// 	buildTime(t, i->Value());
-	// 	obj->Set(col[n_row], t);
-	// }
-	// 
-	// void visit(SQLDate *i) override {
-	// 	Local<Object> t = Object::New(isolate);
-	// 	buildDate(t, i->Value());
-	// 	obj->Set(col[n_row], t);
-	// }
+	void visit(SQLTime *i) override {
+		Local<Object> t = Object::New(isolate);
+		buildTime(t, i->Value());
+		obj->Set(col[n_row], t);
+	}
 
-	void Visit(SQLTimeStamp *i) override {
+	void visit(SQLDate *i) override {
+		Local<Object> t = Object::New(isolate);
+		buildDate(t, i->Value());
+		obj->Set(col[n_row], t);
+	}
+
+	void visit(SQLTimeStamp *i) override {
 		Local<Object> t = Object::New(isolate);
 		buildDate(t, i->Value().date);
 		buildTime(t, i->Value().time);
 		t->Set(v8str("fraction"), Int32::New(isolate, i->Value().fraction));
 		obj->Set(col[n_row], t);
 	}
-	void Visit(SQLNull*) override { obj->Set(col[n_row], Null(isolate)); }
+	void visit(SQLNull*) override { obj->Set(col[n_row], Null(isolate)); }
 
 	void buildDate(Local<Object>& t, const SQLDateStruct& d) {
 		t->Set(v8str("year"), Int32::New(isolate, d.year));
@@ -87,7 +87,7 @@ void JSConnection::Init(Isolate* isolate) {
 	tpl->InstanceTemplate()->SetInternalFieldCount(1);
 	NODE_SET_PROTOTYPE_METHOD(tpl, "connect", connect);
 	NODE_SET_PROTOTYPE_METHOD(tpl, "query", query);
-	// NODE_SET_PROTOTYPE_METHOD(tpl, "prepare", prepare);
+	NODE_SET_PROTOTYPE_METHOD(tpl, "prepare", prepare);
 
 	NODE_SET_PROTOTYPE_METHOD(tpl, "c_internal_test", c_internal_test);
 	constructor.Reset(isolate, tpl->GetFunction());
@@ -167,10 +167,26 @@ void JSConnection::query(const v8::FunctionCallbackInfo<v8::Value>& args)
 	if (args[0]->IsString()) {
 		if (args.Length() < 2 || !args[1]->IsFunction()) {
 			isolate->ThrowException(
-				Exception::TypeError(v8str("Error: expected callback  for second parameter")));
+				Exception::TypeError( v8str("Error: expected callback  for second parameter") ));
 			return;
 		}
 		queryDirect(args, args[0]->ToString(), 1);
+	}
+	else if (args[0]->IsObject()) {
+		if (args.Length() < 2 || !args[1]->IsArray()) {
+			isolate->ThrowException(Exception::TypeError(
+				v8str("Error: expected array of paramters to bind for 2nd parameter")
+			));
+			return;
+		}
+
+		if (args.Length() < 3 || !args[2]->IsFunction()) {
+			isolate->ThrowException(Exception::TypeError(
+				v8str("Error: expected callback to bind for 3rd parameter")
+			));
+			return;
+		}
+		queryPrepared(args);
 	}
 	else {
 		isolate->ThrowException(Exception::TypeError(
@@ -187,6 +203,29 @@ Local<Object> errorsToV8Object(const Connection::ErrorDetail& e, Isolate* isolat
 	eo->Set(v8str("description"), v8str(e.description.c_str()));
 	return eo;
 }
+
+void JSConnection::prepare(const v8::FunctionCallbackInfo<v8::Value>& args) {
+	Isolate* isolate = args.GetIsolate();
+	JSConnection* self = ObjectWrap::Unwrap<JSConnection>(args.Holder());
+	if (args.Length() < 1 || !args[0]->IsString()) {
+		isolate->ThrowException(Exception::TypeError(
+			v8str("Error: expected string for first parameter")
+		));
+		return;
+	}
+	Local<String> lstmt = args[0]->ToString();
+	String::Utf8Value stmt(isolate, lstmt);
+	Connection::QueryHandle qh = self->conn_.prepare(*stmt);
+	Local<Object> res = Object::New(isolate);
+	if (qh.idx < 0) {
+		res->Set(v8str("err"), errorsToV8Object(qh.errors, isolate));
+	}
+	res->Set(v8str("index"), Int32::New(isolate, qh.idx));
+	res->Set(v8str("num_params"), Int32::New(isolate, qh.num_params));
+	res->Set(v8str("retcode"), Int32::New(isolate, qh.retcode));
+	args.GetReturnValue().Set(res);
+}
+
 
 
 void queryExecuteHelper(const v8::FunctionCallbackInfo<v8::Value>& args, Connection::QueryResult&res, int func_id) {
@@ -216,7 +255,7 @@ void queryExecuteHelper(const v8::FunctionCallbackInfo<v8::Value>& args, Connect
 		col_desc.push_back(String::NewFromUtf8(isolate, col.name.c_str()));
 		Local<Object> field = Object::New(isolate);
 		field->Set(v8str("columnname"), col_desc[i]);
-		// field->Set(v8str("type"), Int32::New(isolate, SQLDataConverter::SQLTypeDecay(col.type)));
+		field->Set(v8str("type"), Int32::New(isolate, SQLDataConverter::SQLTypeDecay(col.type)));
 		field->Set(v8str("nullable"), Boolean::New(isolate, col.nullable));
 		fields->Set(i, field);
 		++i;
@@ -252,7 +291,164 @@ void JSConnection::queryDirect(const v8::FunctionCallbackInfo<v8::Value>& args, 
 	queryExecuteHelper(args, *res, func_id);
 }
 
+void JSConnection::queryPrepared(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
+	Isolate* isolate = args.GetIsolate();
+	Local<Context> context = isolate->GetCurrentContext();
+	JSConnection* self = ObjectWrap::Unwrap<JSConnection>(args.Holder());
+	Connection::QueryHandle handle;
+	Local<Object> h = args[0]->ToObject(context).ToLocalChecked();
+	auto hidx = h->Get(v8str("index"));
+	if (!hidx->IsInt32()) {
+		isolate->ThrowException(Exception::TypeError(
+			v8str("Error: 1st param is not a valid handle")
+		));
+		return;
+	}
 
+	handle.idx = hidx->ToInt32(context).ToLocalChecked()->Value();
+	handle.num_params = h->Get(v8str("num_params"))->ToInt32(context).ToLocalChecked()->Value();
+	handle.retcode = h->Get(v8str("retcode"))->ToInt32(context).ToLocalChecked()->Value();
+
+	Local<Array> params = Local<Array>::Cast(args[1]);
+	if (params->Length() != handle.num_params) {
+		std::stringstream ss;
+		ss << "Error: Expected " << handle.num_params << " to bind, yet " << params->Length() << " provided";
+		std::string str = ss.str();
+		isolate->ThrowException(Exception::TypeError(
+			String::NewFromUtf8(isolate, str.c_str())
+		));
+		return;
+	}
+
+	auto& conn = self->conn_;
+	Local<Int32> uu;
+	std::vector<double> nums;
+	std::vector<int64_t> int_nums;
+	std::vector<std::string> u8;
+	std::vector<SQLTimeStampStruct> time_stamp;
+	SQLNullData null_data;
+	nums.reserve(params->Length());
+	u8.reserve(params->Length());
+	int_nums.reserve(params->Length());
+	time_stamp.reserve(params->Length());
+	for (size_t i = 0; i < params->Length(); ++i) {
+		auto r = params->Get(i);
+		// String
+		if (r->IsString()) {
+			u8.push_back(*String::Utf8Value(isolate, r));
+			conn.bindParam(handle, i + 1, u8.back());
+		}
+		// NUll
+		else if (r->IsNull()) {
+			conn.bindParam(handle, i + 1, null_data);
+		}
+		//Big Int
+		else if (r->IsBigInt()) {
+			int_nums.push_back(r->ToBigInt(context).ToLocalChecked()->Int64Value());
+			conn.bindParam(handle, i + 1, &int_nums.back());
+		}
+		// Int, float, double, bigint, float, numeric
+		else if (r->IsNumber()) {
+			nums.push_back(r->NumberValue(context).ToChecked());
+			conn.bindParam(handle, i + 1, &nums.back());
+		}
+		else if (r->IsObject()) {
+			
+			Local<Object> o = r->ToObject(context).ToLocalChecked();
+#define GET_D(n) \
+				auto maybe = o->Get(context, v8str(n)); \
+				if (maybe.IsEmpty()) return false; \
+				auto int32_maybe = maybe.ToLocalChecked()->ToInt32(context); \
+				if (int32_maybe.IsEmpty()) return false; \
+				int res = int32_maybe.ToLocalChecked()->Value()
+
+			auto date_get = [&context, &o, &isolate](SQLDateStruct& date) -> bool {
+				{
+					GET_D("year");
+					date.year = res;
+				}
+				{
+					GET_D("date");
+					date.date = res;
+				}
+				{
+					GET_D("month");
+					date.month = res;
+				}
+				return true;
+			};
+			auto time_get = [&context, &o, &isolate](SQLTimeStruct & date) -> bool {
+				{
+					GET_D("hour");
+					date.hour = res;
+				}
+				{
+					GET_D("minute");
+					date.minute = res;
+				}
+				{
+					GET_D("second");
+					date.second = res;
+				}
+				return true;
+			};
+#undef GET_D
+			// numeric
+			if (o->Has(v8str("scale"))) {
+				
+			}
+			// timestmp
+			else if (o->Has(v8str("fraction"))) {
+				time_stamp.push_back(SQLTimeStampStruct{});
+				if (!time_get(*&time_stamp.back().time) || !date_get(*&time_stamp.back().date)) {
+					isolate->ThrowException(Exception::TypeError(
+						v8str("Error: Expected timestamp with year, month, date, hour, minute, second")
+					));
+					return;
+				}
+			}
+			// date
+			else if (o->Has(v8str("date"))) {
+				time_stamp.push_back(SQLTimeStampStruct{});
+				if (!date_get(*&time_stamp.back().date)) {
+					isolate->ThrowException(Exception::TypeError(
+						v8str("Error: Expected date with year, month, date")
+					));
+					return;
+				}
+				conn.bindParam(handle, i + 1, &time_stamp.back().date);
+			}
+			// time or else
+			else {
+				time_stamp.push_back(SQLTimeStampStruct{});
+				if (!time_get(*&time_stamp.back().time)) {
+					isolate->ThrowException(Exception::TypeError(
+						v8str("Error: Expected time with hour, minute, second")
+					));
+					return;
+				}
+				conn.bindParam(handle, i + 1, &time_stamp.back().date);
+			}
+		}
+		if (handle.retcode != 0) {
+			Local<Object> err = Object::New(isolate);
+			Local<Array> arr = Array::New(isolate);
+			err->Set(v8str("retcode"), Int32::New(isolate, handle.retcode));
+			err->Set(v8str("err"), errorsToV8Object(handle.errors, isolate));
+			Local<Function> cb = Local<Function>::Cast(args[2]);
+			Local<Value> argv[3] = { err, arr, arr };
+			auto maybe_local = cb->Call(context, Null(isolate), 3, argv);
+			if (!maybe_local.IsEmpty()) maybe_local.ToLocalChecked();
+			return;
+		}
+	}
+	
+	auto res = self->conn_.queryPrepared(handle);
+
+	queryExecuteHelper(args, *res, 2);
+
+}
 
 
 

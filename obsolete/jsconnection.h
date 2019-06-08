@@ -18,7 +18,7 @@ private:
 	static void connect(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void query(const v8::FunctionCallbackInfo<v8::Value>& args);
 	// static void prepare(const v8::FunctionCallbackInfo<v8::Value>& args);
-	static void queryDirect(const v8::FunctionCallbackInfo<v8::Value>& args, Local<String> lq, int func_id);
+	// static void queryDirect(const v8::FunctionCallbackInfo<v8::Value>& args, Local<String> lq, int func_id);
 	// static void queryPrepared(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void c_internal_test(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static Persistent<Function> constructor;

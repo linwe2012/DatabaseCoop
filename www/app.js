@@ -1,9 +1,10 @@
 mysql = require('../Debug/libmysql.node')
 
+
 conn = mysql.createConnection({
-    database: 'library',
-    user: 'lib',
-    password: 'lib'
+    database: 'whatever',
+    user: 'i dont care',
+    password: 'doesnt matter'
 })
 
 httpstatus = {
@@ -12,66 +13,6 @@ httpstatus = {
 }
   
 var retcode = conn.connect()
-sqltypes = mysql.fetchTypes()
-
-sqlhandles = {
-    login: conn.prepare('select * from usr where usr_name=?'),
-
-    new_user: conn.prepare(`insert into usr 
-    (usr_name, usr_passwd, time_registered, max_num_book_allowed, max_renew_allowed) 
-    values (?,?, CURRENT_TIMESTAMP(), -1, -1)`),
-    
-    batch_insert_book: conn.prepare(`insert into book 
-    (ISBN, book_title, publisher, date_published, num_pages, cover_img, book_desc, edition_format, book_lang) 
-    values (?, ?, ?, ?, ?, ?, ?, ?, ?)`),
-
-    author_by_id: conn.prepare(`select * from author where author_id=?`),
-    insert_author: conn.prepare(`insert into author (author_id, author_name, author_img_url) values (?,?,?)`),
-    insert_written_by: conn.prepare(`insert into written_by (ISBN, author_id) values(?,?)`),
-    insert_borrow: conn.prepare(`insert into borrow values (?, ?, ?, ?, ?, ?)`)
-}
-
-config = {
-    borrow_time : {
-        year: 0,
-        month: 2,
-        date: 0,
-        hour: 0,
-        minute: 0,
-        second: 0,
-        fraction: 0
-    },
-
-    renew_time:  {
-        year: 0,
-        month: 2,
-        date: 0,
-        hour: 0,
-        minute: 0,
-        second: 0,
-        fraction: 0
-    },
-
-    min_time_gap_renew: {
-        year: 0,
-        month: 1,
-        date: 0,
-        hour: 0,
-        minute: 0,
-        second: 0,
-        fraction: 0
-    },
-
-    returnbook_warning: {
-        year: 0,
-        month: 1,
-        date: 0,
-        hour: 0,
-        minute: 0,
-        second: 0,
-        fraction: 0
-    }
-}
 
 utils = require('./misc/utils')
 

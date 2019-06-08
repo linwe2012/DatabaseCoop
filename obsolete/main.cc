@@ -61,6 +61,18 @@ NODE_MODULE_INIT(/* exports, module, context */) {
 		.ToLocalChecked(),
 		FunctionTemplate::New(isolate, MySQLretcodeToString)->GetFunction(context).ToLocalChecked()
 	).FromJust();
+
+	// exports->Set(context,
+	// 	String::NewFromUtf8(isolate, "fetchTypes", NewStringType::kNormal)
+	// 	.ToLocalChecked(),
+	// 	FunctionTemplate::New(isolate, MySQLfetchTypes)->GetFunction(context).ToLocalChecked()
+	// ).FromJust();
+	// 
+	// exports->Set(context,
+	// 	String::NewFromUtf8(isolate, "fetchTypeNameArray", NewStringType::kNormal)
+	// 	.ToLocalChecked(),
+	// 	FunctionTemplate::New(isolate, MySQLfetchTypeNameArray)->GetFunction(context).ToLocalChecked()
+	// ).FromJust();
 }
 #else
 #include "build/connection.h"
